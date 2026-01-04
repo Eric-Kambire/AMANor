@@ -15,6 +15,7 @@ export type ViewState = 'home' | 'science' | 'vision';
 const App: React.FC = () => {
   const [view, setView] = useState<ViewState>('home');
   const [activeSection, setActiveSection] = useState(0);
+  const [targetScienceSection, setTargetScienceSection] = useState(0);
   const driverRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -41,11 +42,22 @@ const App: React.FC = () => {
     });
   };
 
+  const handleViewChange = (newView: ViewState, section: number = 0) => {
+    if (newView === 'science') {
+      setTargetScienceSection(section);
+    }
+    setView(newView);
+  };
+
   const renderHome = () => (
     <div className="relative h-screen w-full overflow-hidden">
       <div className="visual-stack">
         <div className={`section-layer dark-bg ${activeSection === 0 ? 'active' : ''}`}>
-          <Hero isActive={activeSection === 0} onOpenScience={() => setView('science')} onOpenVision={() => setView('vision')} />
+          <Hero 
+            isActive={activeSection === 0} 
+            onOpenScience={() => handleViewChange('science', 0)} 
+            onOpenVision={() => handleViewChange('vision')} 
+          />
         </div>
         <div className={`section-layer ${activeSection === 1 ? 'active' : ''}`}>
           <FlavorFeature isActive={activeSection === 1} />
@@ -61,7 +73,7 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      <Navbar activeSection={activeSection} onViewChange={setView} currentView={view} />
+      <Navbar activeSection={activeSection} onViewChange={handleViewChange} currentView={view} />
       <LocationBanner />
       
       <div 
@@ -97,7 +109,7 @@ const App: React.FC = () => {
   return (
     <div className="bg-black min-h-screen w-full transition-all duration-700">
       {view === 'home' && renderHome()}
-      {view === 'science' && <ScienceView onClose={() => setView('home')} />}
+      {view === 'science' && <ScienceView onClose={() => setView('home')} initialSection={targetScienceSection} />}
       {view === 'vision' && <VisionDeck onClose={() => setView('home')} />}
     </div>
   );

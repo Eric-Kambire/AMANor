@@ -1,13 +1,14 @@
 
-import React, { useState, useRef, useEffect } from 'react';
-import { X, Shield, Cpu, Zap, Droplets, FileText, Maximize, ZoomIn, ChevronLeft, ChevronRight, Play, Package, Gift, ShoppingBag, ArrowRight, Heart, Video, Monitor, Pause } from 'lucide-react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { X, Shield, Cpu, Zap, Droplets, FileText, Maximize, ZoomIn, ChevronLeft, ChevronRight, Play, Package, Gift, ShoppingBag, ArrowRight, Heart, Video, Monitor, Pause, Sparkles, BookOpen } from 'lucide-react';
 
 interface ScienceViewProps {
   onClose: () => void;
+  initialSection?: number;
 }
 
-const ScienceView: React.FC<ScienceViewProps> = ({ onClose }) => {
-  const [activeSection, setActiveSection] = useState(0);
+const ScienceView: React.FC<ScienceViewProps> = ({ onClose, initialSection = 0 }) => {
+  const [activeSection, setActiveSection] = useState(initialSection);
   const driverRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -19,9 +20,17 @@ const ScienceView: React.FC<ScienceViewProps> = ({ onClose }) => {
     }
   };
 
-  const scrollTo = (index: number) => {
+  const scrollTo = useCallback((index: number) => {
     driverRef.current?.scrollTo({ top: index * window.innerHeight, behavior: 'smooth' });
-  };
+  }, []);
+
+  useEffect(() => {
+    if (initialSection !== 0) {
+      // Small delay to ensure the component is mounted before scrolling
+      const timer = setTimeout(() => scrollTo(initialSection), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [initialSection, scrollTo]);
 
   const navItems = ['Innovation 3D', 'Bouclier Bio', 'Démonstration Video', 'Dossier Technique', 'Investissement'];
 
@@ -41,27 +50,27 @@ const ScienceView: React.FC<ScienceViewProps> = ({ onClose }) => {
         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 group-hover:text-teal-600 transition-colors">Quitter le Labo</span>
       </button>
 
-      {/* Tech Header - Adjusted for better spacing */}
-      <header className="fixed top-8 left-8 md:top-12 md:left-20 z-50 flex items-center gap-6">
-        <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-teal-500/10 flex items-center justify-center border border-teal-500/20 shadow-sm">
-          <Cpu className="w-6 h-6 md:w-7 md:h-7 text-teal-600" />
+      {/* Tech Header */}
+      <header className="fixed top-6 left-8 md:top-10 md:left-20 z-50 flex items-center gap-6">
+        <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-teal-500/10 flex items-center justify-center border border-teal-500/20 shadow-sm">
+          <Cpu className="w-5 h-5 md:w-6 md:h-6 text-teal-600" />
         </div>
         <div className="hidden sm:block">
-          <h1 className="text-lg font-black tracking-tight text-slate-900 uppercase tracking-[0.1em]">AMANor Labs</h1>
-          <p className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.3em]">Spécifications v3.0</p>
+          <h1 className="text-sm md:text-base font-black tracking-tight text-slate-900 uppercase tracking-[0.1em]">AMANor Labs</h1>
+          <p className="text-[8px] text-slate-400 font-bold uppercase tracking-[0.3em]">Spécifications v3.5</p>
         </div>
       </header>
 
       {/* Modern Vertical Navigation */}
-      <div className="fixed left-6 md:left-20 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-6 md:gap-8">
+      <div className="fixed left-6 md:left-20 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-5 md:gap-8">
         {navItems.map((name, idx) => (
           <button 
             key={idx}
             onClick={() => scrollTo(idx)}
             className="group flex items-center gap-6 focus:outline-none"
           >
-            <div className={`w-1 transition-all duration-700 rounded-full ${activeSection === idx ? 'h-12 md:h-16 bg-teal-500 shadow-[0_0_20px_rgba(20,184,166,0.5)]' : 'h-3 bg-slate-200 group-hover:bg-slate-300'}`} />
-            <span className={`text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-500 hidden md:block ${activeSection === idx ? 'opacity-100 text-teal-600 translate-x-0' : 'opacity-0 -translate-x-4 text-slate-300'}`}>
+            <div className={`w-1 transition-all duration-700 rounded-full ${activeSection === idx ? 'h-10 md:h-16 bg-teal-500 shadow-[0_0_20px_rgba(20,184,166,0.5)]' : 'h-3 bg-slate-200 group-hover:bg-slate-300'}`} />
+            <span className={`text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-500 hidden xl:block ${activeSection === idx ? 'opacity-100 text-teal-600 translate-x-0' : 'opacity-0 -translate-x-4 text-slate-300'}`}>
               {name}
             </span>
           </button>
@@ -94,21 +103,21 @@ const ScienceView: React.FC<ScienceViewProps> = ({ onClose }) => {
 };
 
 const TechnicalSection1 = ({ isActive }: { isActive: boolean }) => (
-  <div className={`section-layer bg-slate-50 ${isActive ? 'active' : ''} flex items-center justify-center pt-20 pb-10`}>
+  <div className={`section-layer bg-slate-50 ${isActive ? 'active' : ''} flex items-center justify-center pt-16 pb-10`}>
     <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-20 px-8 md:px-20">
       <div className="flex flex-col justify-center">
         <div className={`reveal-content ${isActive ? 'active' : ''}`}>
-          <div className="inline-block px-4 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-600 text-[9px] font-black tracking-[0.5em] uppercase mb-6 md:mb-10">Module 01: Noyau de Filtration</div>
-          <h2 className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 md:mb-8 leading-[0.9] tracking-tighter text-slate-900">Ingénierie de<br/><span className="text-teal-500 italic">Précision.</span></h2>
-          <p className="text-slate-500 text-base md:text-xl font-light max-w-lg leading-relaxed">
-            Un empilement de filtration de qualité médicale conçu pour les eaux dures du Royaume. Chaque micron est optimisé pour garantir une pureté absolue.
+          <div className="inline-block px-4 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-600 text-[9px] font-black tracking-[0.5em] uppercase mb-6">Module 01: Noyau de Filtration</div>
+          <h2 className="text-4xl md:text-7xl lg:text-8xl font-black mb-6 leading-[0.9] tracking-tighter text-slate-900">Ingénierie de<br/><span className="text-teal-500 italic">Précision.</span></h2>
+          <p className="text-slate-500 text-sm md:text-xl font-light max-w-lg leading-relaxed">
+            Un empilement de filtration de qualité médicale conçu pour les eaux dures. Chaque micron est optimisé pour garantir une pureté absolue.
           </p>
         </div>
       </div>
-      <div className="relative h-[300px] md:h-[500px] flex items-center justify-center">
-        <div className={`w-48 h-72 md:w-64 md:h-96 bg-white border border-slate-200 rounded-[3rem] md:rounded-[4rem] shadow-2xl transition-all duration-1000 ${isActive ? 'scale-100 rotate-0 opacity-100' : 'scale-75 rotate-12 opacity-0'}`}>
-            <div className="absolute inset-x-0 -top-12 md:-top-16 flex flex-col items-center">
-                <div className="w-32 h-20 md:w-40 md:h-24 bg-teal-500/20 rounded-2xl border-4 border-white shadow-lg flex items-center justify-center">
+      <div className="relative h-[250px] md:h-[500px] flex items-center justify-center">
+        <div className={`w-40 h-64 md:w-64 md:h-96 bg-white border border-slate-200 rounded-[3rem] shadow-2xl transition-all duration-1000 ${isActive ? 'scale-100 rotate-0 opacity-100' : 'scale-75 rotate-12 opacity-0'}`}>
+            <div className="absolute inset-x-0 -top-10 md:-top-16 flex flex-col items-center">
+                <div className="w-32 h-16 md:w-40 md:h-24 bg-teal-500/20 rounded-2xl border-4 border-white shadow-lg flex items-center justify-center">
                    <span className="text-[9px] font-black uppercase text-teal-700">Flex-Grip</span>
                 </div>
             </div>
@@ -126,22 +135,22 @@ const TechnicalSection1 = ({ isActive }: { isActive: boolean }) => (
 );
 
 const TechnicalSection2 = ({ isActive }: { isActive: boolean }) => (
-  <div className={`section-layer bg-white ${isActive ? 'active' : ''} flex items-center justify-center pt-20 pb-10`}>
+  <div className={`section-layer bg-white ${isActive ? 'active' : ''} flex items-center justify-center pt-16 pb-10`}>
     <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-20 px-8 md:px-20">
-      <div className="order-2 lg:order-1 relative h-[300px] md:h-[500px] flex items-center justify-center">
+      <div className="order-2 lg:order-1 relative h-[250px] md:h-[500px] flex items-center justify-center">
         <div className={`relative transition-all duration-1000 ${isActive ? 'scale-110 opacity-100' : 'scale-75 opacity-0'}`}>
-            <Shield className="w-48 h-48 md:w-64 md:h-64 text-teal-500/10" />
+            <Shield className="w-40 h-40 md:w-64 md:h-64 text-teal-500/10" />
             <div className="absolute inset-0 flex items-center justify-center">
-                <Droplets className="w-24 h-24 md:w-32 md:h-32 text-teal-500 drop-shadow-[0_0_30px_rgba(20,184,166,0.3)]" />
+                <Droplets className="w-20 h-20 md:w-32 md:h-32 text-teal-500 drop-shadow-[0_0_30px_rgba(20,184,166,0.3)]" />
             </div>
         </div>
       </div>
       <div className="order-1 lg:order-2 flex flex-col justify-center">
         <div className={`reveal-content ${isActive ? 'active' : ''}`}>
-          <div className="inline-block px-4 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-600 text-[9px] font-black tracking-[0.5em] uppercase mb-6 md:mb-10">Unité: AMANor Nomad</div>
-          <h2 className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 md:mb-8 leading-[0.9] tracking-tighter text-slate-900">Bouclier<br/><span className="text-slate-300">Biologique.</span></h2>
-          <p className="text-slate-500 text-base md:text-xl font-light leading-relaxed mb-6 md:mb-10 max-w-lg">
-            Ultra-filtration de 0,1 micron. Une barrière physique impénétrable contre 99,99% des bactéries et parasites, testée dans les conditions les plus rudes.
+          <div className="inline-block px-4 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-600 text-[9px] font-black tracking-[0.5em] uppercase mb-6">Unité: AMANor Nomad</div>
+          <h2 className="text-4xl md:text-7xl lg:text-8xl font-black mb-6 leading-[0.9] tracking-tighter text-slate-900">Bouclier<br/><span className="text-slate-300">Biologique.</span></h2>
+          <p className="text-slate-500 text-sm md:text-xl font-light leading-relaxed max-w-lg">
+            Ultra-filtration de 0,1 micron. Une barrière physique impénétrable contre 99,99% des bactéries et parasites.
           </p>
         </div>
       </div>
@@ -150,15 +159,14 @@ const TechnicalSection2 = ({ isActive }: { isActive: boolean }) => (
 );
 
 const VideoSection = ({ isActive }: { isActive: boolean }) => (
-  <div className={`section-layer bg-slate-50 ${isActive ? 'active' : ''} flex items-center justify-center pt-20 pb-10`}>
+  <div className={`section-layer bg-slate-50 ${isActive ? 'active' : ''} flex items-center justify-center pt-16 pb-10`}>
     <div className="max-w-7xl w-full px-8 md:px-20 text-center">
-      <div className={`reveal-content ${isActive ? 'active' : ''} mb-8 md:mb-12`}>
-        <div className="inline-block px-4 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-600 text-[9px] font-black tracking-[0.5em] uppercase mb-6">Démonstration Produit</div>
-        <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-slate-900 leading-none">La Confiance <br className="md:hidden"/><span className="text-teal-500 italic">en Action.</span></h2>
+      <div className={`reveal-content ${isActive ? 'active' : ''} mb-6 md:mb-10`}>
+        <div className="inline-block px-4 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-600 text-[9px] font-black tracking-[0.5em] uppercase mb-4 md:mb-6">Démonstration Produit</div>
+        <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-slate-900 leading-none">La Confiance <br className="md:hidden"/><span className="text-teal-500 italic">en Action.</span></h2>
       </div>
 
       <div className={`relative w-full max-w-4xl aspect-video mx-auto bg-black rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] transition-all duration-1000 ${isActive ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}>
-        {/* Placeholder for the Video mentioned in the doc */}
         <div className="absolute inset-0 flex items-center justify-center group cursor-pointer">
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
           <img src="https://images.unsplash.com/photo-1517646288024-aaee039b56f1?auto=format&fit=crop&q=80&w=1200" alt="Video Placeholder" className="w-full h-full object-cover opacity-60" />
@@ -166,8 +174,8 @@ const VideoSection = ({ isActive }: { isActive: boolean }) => (
             <Play className="w-8 h-8 md:w-12 md:h-12 text-white fill-current ml-1" />
           </div>
           <div className="absolute bottom-8 left-8 z-20 flex items-center gap-4 text-white">
-            <Video className="w-5 h-5 text-teal-400" />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Lecture: Démo Laboratoire AMANor</span>
+            <Video className="w-4 h-4 md:w-5 md:h-5 text-teal-400" />
+            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em]">Lecture: Démo Laboratoire AMANor</span>
           </div>
         </div>
       </div>
@@ -178,122 +186,120 @@ const VideoSection = ({ isActive }: { isActive: boolean }) => (
 const DossierSection = ({ isActive }: { isActive: boolean }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
-  const totalPages = 13;
+  const totalPages = 8;
   
-  // High-fidelity slide content (Mocking PDF pages)
+  // Cinematic high-fidelity presentation slides
   const slides = [
-    { title: "Introduction AMANor", desc: "La révolution de l'eau au Maroc.", color: "bg-slate-900" },
-    { title: "Problématique Locale", desc: "Dureté excessive et risques sanitaires.", color: "bg-teal-900" },
-    { title: "Anatomie Technique", desc: "Membranes d'ultra-filtration 0.1μm.", color: "bg-slate-800" },
-    { title: "Validation Labo", desc: "Certifications et tests de pureté.", color: "bg-teal-800" },
-    { title: "Étude d'Impact", desc: "Réduction des calculs rénaux.", color: "bg-slate-900" },
-    { title: "Modèle Économique", desc: "Hardware + Consommables récurrents.", color: "bg-teal-700" },
-    { title: "Universalité", desc: "Adaptation aux bouteilles et robinets.", color: "bg-slate-800" },
-    { title: "Connectivité", desc: "IoT et suivi de la santé du filtre.", color: "bg-teal-900" },
-    { title: "Impact Social", desc: "1 Acheté = 1 Donné pour le monde rural.", color: "bg-slate-900" },
-    { title: "Phase Pilote", desc: "Lancement Casablanca/Marrakech.", color: "bg-teal-800" },
-    { title: "L'Équipe Fondatrice", desc: "Ingénieurs École Centrale Casablanca.", color: "bg-slate-900" },
-    { title: "Partenaires Industriels", desc: "Stratégie de production locale.", color: "bg-teal-700" },
-    { title: "Conclusion & Vision", desc: "Une eau de source à chaque robinet.", color: "bg-slate-800" },
+    { title: "Manifeste AMANor", desc: "La vision d'une autonomie hydrique totale pour chaque foyer marocain.", bg: "bg-slate-900", icon: Sparkles },
+    { title: "Le Défi Dureté", desc: "Cartographie interactive de la minéralisation de l'eau au Maroc (Zones 35°f+).", bg: "bg-teal-900", icon: Droplets },
+    { title: "Universal Flex-Grip", desc: "Conception adaptative pour tous les robinets et bidons standards du Royaume.", bg: "bg-zinc-900", icon: Cpu },
+    { title: "Indicateur Aman-Scale", desc: "Algorithme propriétaire mesurant l'usure réelle de la membrane.", bg: "bg-slate-800", icon: Zap },
+    { title: "Impact Bio-Science", desc: "Prévention prouvée contre les pathologies rénales liées à la dureté de l'eau.", bg: "bg-teal-950", icon: Shield },
+    { title: "Logistique Circulaire", desc: "Programme de collecte et recyclage des cartouches usagées au Maroc.", bg: "bg-zinc-800", icon: Package },
+    { title: "Modèle Solidaire 1:1", desc: "Pour chaque unité urbaine, une solution filtrante est offerte en zone rurale.", bg: "bg-slate-900", icon: Heart },
+    { title: "Expansion 2025", desc: "Le futur de l'eau saine de Tanger à Lagouira.", bg: "bg-teal-800", icon: ArrowRight },
   ];
+
+  const handleNext = useCallback(() => setCurrentPage((prev) => (prev + 1) % totalPages), [totalPages]);
+  const handlePrev = useCallback(() => setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages), [totalPages]);
 
   useEffect(() => {
     let interval: number;
     if (isAutoPlaying && isActive) {
-      interval = window.setInterval(() => {
-        setCurrentPage((prev) => (prev + 1) % totalPages);
-      }, 4000);
+      interval = window.setInterval(handleNext, 5000);
     }
     return () => clearInterval(interval);
-  }, [isAutoPlaying, isActive]);
-
-  const handleNext = () => setCurrentPage((prev) => (prev + 1) % totalPages);
-  const handlePrev = () => setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
+  }, [isAutoPlaying, isActive, handleNext]);
 
   return (
     <div className={`section-layer bg-white ${isActive ? 'active' : ''} flex items-center justify-center pt-20 pb-10`}>
       <div className="max-w-7xl w-full px-8 md:px-20 text-center pointer-events-auto">
-        <div className={`reveal-content ${isActive ? 'active' : ''} mb-8 md:mb-12`}>
-          <div className="inline-block px-4 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-600 text-[9px] font-black tracking-[0.5em] uppercase mb-6">Vision Stratégique</div>
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-slate-900 leading-none">Dossier <span className="text-slate-200">Technique.</span></h2>
-          <p className="text-slate-400 text-sm md:text-lg font-light mt-4 max-w-lg mx-auto">Visualisez notre travail à travers ce carrousel immersif.</p>
+        <div className={`reveal-content ${isActive ? 'active' : ''} mb-6 md:mb-10`}>
+          <div className="inline-block px-4 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-600 text-[9px] font-black tracking-[0.5em] uppercase mb-4 md:mb-6">Dossier Technique : Our Work</div>
+          <h2 className="text-3xl md:text-6xl lg:text-7xl font-black tracking-tighter text-slate-900 leading-none">Vision <span className="text-slate-200">Interactive.</span></h2>
+          <p className="text-slate-400 text-xs md:text-lg font-light mt-2 max-w-lg mx-auto">Explorez les fondations scientifiques de notre mission.</p>
         </div>
 
-        <div className={`relative w-full max-w-4xl h-[350px] md:h-[550px] mx-auto bg-slate-50 rounded-[2rem] md:rounded-[3rem] border border-slate-200 overflow-hidden shadow-2xl group transition-all duration-1000 ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
-          {/* Flipbook / Carousel Container */}
+        <div className={`relative w-full max-w-4xl h-[400px] md:h-[580px] mx-auto bg-slate-50 rounded-[3rem] border border-slate-200 overflow-hidden shadow-2xl transition-all duration-1000 ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
           <div className="h-full w-full flex flex-col relative">
-              {/* Slides Container */}
-              <div className="flex-1 relative overflow-hidden">
-                {slides.map((slide, idx) => (
-                  <div 
-                    key={idx}
-                    className={`absolute inset-0 transition-all duration-1000 flex items-center justify-center p-12 ${
-                      idx === currentPage ? 'opacity-100 translate-x-0 scale-100' : 
-                      idx < currentPage ? 'opacity-0 -translate-x-full scale-95' : 'opacity-0 translate-x-full scale-95'
-                    }`}
-                  >
-                    <div className={`w-full h-full rounded-[2rem] ${slide.color} shadow-inner flex flex-col items-center justify-center text-white p-10 relative overflow-hidden`}>
-                        <div className="absolute top-0 right-0 p-8 opacity-10">
-                            <FileText className="w-32 h-32" />
-                        </div>
-                        <span className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400 mb-6">AMANor Technical Paper</span>
-                        <h4 className="text-3xl md:text-5xl font-black mb-6 tracking-tight text-center">{slide.title}</h4>
-                        <p className="text-white/60 text-lg md:text-xl font-light text-center max-w-md">{slide.desc}</p>
-                        <div className="mt-10 flex gap-1">
-                          {[...Array(3)].map((_, i) => (
-                            <div key={i} className="w-12 h-1 bg-white/10 rounded-full" />
-                          ))}
-                        </div>
+              {/* Horizontal Cinematic Carousel */}
+              <div className="flex-1 relative overflow-hidden flex items-center justify-center">
+                {slides.map((slide, idx) => {
+                  const Icon = slide.icon;
+                  return (
+                    <div 
+                      key={idx}
+                      className={`absolute inset-0 transition-all duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] flex items-center justify-center p-8 md:p-12 ${
+                        idx === currentPage ? 'opacity-100 translate-x-0 scale-100' : 
+                        idx < currentPage ? 'opacity-0 -translate-x-full scale-95' : 'opacity-0 translate-x-full scale-95'
+                      }`}
+                    >
+                      <div className={`w-full h-full rounded-[2.5rem] ${slide.bg} shadow-inner flex flex-col items-center justify-center text-white p-10 md:p-20 relative overflow-hidden`}>
+                          <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
+                              <BookOpen className="w-48 h-48 md:w-80 md:h-80" />
+                          </div>
+                          <div className="p-5 md:p-6 rounded-3xl bg-white/5 border border-white/10 mb-8 md:mb-12">
+                              <Icon className="w-10 h-10 md:w-14 md:h-14 text-teal-400" />
+                          </div>
+                          <span className="text-[9px] font-black uppercase tracking-[0.4em] text-teal-500 mb-6">Chapter {(idx + 1).toString().padStart(2, '0')}</span>
+                          <h4 className="text-3xl md:text-5xl font-black mb-6 tracking-tight text-center max-w-2xl leading-[1.1]">{slide.title}</h4>
+                          <p className="text-white/60 text-base md:text-xl font-light text-center max-w-lg leading-relaxed">{slide.desc}</p>
+                          
+                          {/* Progress Dots */}
+                          <div className="mt-12 md:mt-16 flex gap-2">
+                            {slides.map((_, i) => (
+                              <div key={i} className={`h-1 transition-all duration-500 rounded-full ${i === currentPage ? 'w-8 bg-teal-500 shadow-[0_0_15px_rgba(20,184,166,0.6)]' : 'w-2 bg-white/10'}`} />
+                            ))}
+                          </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
-              {/* Navigation Bar */}
-              <div className="h-20 md:h-24 bg-white/80 backdrop-blur-xl border-t border-slate-100 px-6 md:px-10 flex items-center justify-between">
-                  <div className="flex items-center gap-4 md:gap-8">
+              {/* Advanced UI Bar */}
+              <div className="h-20 md:h-28 bg-white/90 backdrop-blur-xl border-t border-slate-100 px-6 md:px-12 flex items-center justify-between">
+                  <div className="flex items-center gap-3 md:gap-10">
                       <button 
                         onClick={handlePrev}
-                        className="p-3 text-slate-400 hover:text-teal-600 hover:bg-teal-50 rounded-full transition-all"
+                        className="p-4 text-slate-400 hover:text-teal-600 hover:bg-teal-50 rounded-full transition-all active:scale-90"
+                        aria-label="Previous Page"
                       >
-                        <ChevronLeft className="w-6 h-6" />
+                        <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
                       </button>
                       
-                      <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest tabular-nums">
-                            Page {(currentPage + 1).toString().padStart(2, '0')}
-                          </span>
-                          <div className="w-24 md:w-48 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                      <div className="hidden sm:flex flex-col items-start gap-1">
+                          <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest tabular-nums">Page {currentPage + 1} / {totalPages}</span>
+                          <div className="w-32 md:w-56 h-1 bg-slate-100 rounded-full overflow-hidden relative">
                               <div 
-                                className="h-full bg-teal-500 transition-all duration-500" 
+                                className="h-full bg-teal-500 transition-all duration-700 ease-out" 
                                 style={{ width: `${((currentPage + 1) / totalPages) * 100}%` }} 
                               />
                           </div>
-                          <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">{totalPages}</span>
                       </div>
 
                       <button 
                         onClick={handleNext}
-                        className="p-3 text-slate-400 hover:text-teal-600 hover:bg-teal-50 rounded-full transition-all"
+                        className="p-4 text-slate-400 hover:text-teal-600 hover:bg-teal-50 rounded-full transition-all active:scale-90"
+                        aria-label="Next Page"
                       >
-                        <ChevronRight className="w-6 h-6" />
+                        <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
                       </button>
                   </div>
                   
                   <div className="flex items-center gap-4">
                       <button 
                         onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-                        className={`flex items-center gap-3 px-5 md:px-8 py-2 md:py-3 rounded-full text-[9px] font-black tracking-[0.2em] uppercase transition-all active:scale-95 shadow-lg ${
-                          isAutoPlaying ? 'bg-teal-500 text-white' : 'bg-slate-900 text-white hover:bg-teal-500'
+                        className={`group flex items-center gap-3 px-6 md:px-10 py-3 md:py-4 rounded-full text-[9px] font-black tracking-[0.2em] uppercase transition-all active:scale-95 shadow-xl ${
+                          isAutoPlaying ? 'bg-teal-500 text-white animate-pulse' : 'bg-slate-900 text-white hover:bg-teal-600'
                         }`}
                       >
-                          {isAutoPlaying ? <Pause className="w-3 h-3 md:w-4 md:h-4" /> : <Monitor className="w-3 h-3 md:w-4 md:h-4" />}
-                          <span className="hidden sm:inline">{isAutoPlaying ? 'Pause Auto' : 'Auto-Présentation'}</span>
+                          {isAutoPlaying ? <Pause className="w-4 h-4 fill-white" /> : <Monitor className="w-4 h-4" />}
+                          <span className="hidden sm:inline">{isAutoPlaying ? 'Pause Auto-Scroll' : 'Cinematic Presentation'}</span>
                       </button>
-                      <div className="hidden sm:flex items-center gap-4 text-slate-300">
-                          <button className="hover:text-teal-600 transition-colors"><ZoomIn className="w-4 h-4" /></button>
-                          <button className="hover:text-teal-600 transition-colors"><Maximize className="w-4 h-4" /></button>
-                      </div>
+                      <button className="hidden sm:flex p-4 text-slate-300 hover:text-teal-600 transition-colors">
+                        <Maximize className="w-5 h-5" />
+                      </button>
                   </div>
               </div>
           </div>
@@ -306,7 +312,7 @@ const DossierSection = ({ isActive }: { isActive: boolean }) => {
 const TechnicalSection5 = ({ isActive }: { isActive: boolean }) => (
   <div className={`section-layer bg-slate-50 ${isActive ? 'active' : ''} flex items-center justify-center pt-24 pb-12 overflow-y-auto`}>
     <div className="max-w-7xl w-full px-8 md:px-20">
-      <div className={`reveal-content ${isActive ? 'active' : ''} text-center mb-10 md:mb-16`}>
+      <div className={`reveal-content ${isActive ? 'active' : ''} text-center mb-10`}>
         <div className="inline-block px-4 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-600 text-[9px] font-black tracking-[0.5em] uppercase mb-6 md:mb-8">La Carte AMANor</div>
         <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter mb-4 md:mb-6 text-slate-900 leading-none">Investissez dans votre santé.<br/><span className="text-teal-500 italic">Impactez une vie.</span></h2>
         
@@ -321,10 +327,10 @@ const TechnicalSection5 = ({ isActive }: { isActive: boolean }) => (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 max-w-5xl mx-auto pb-10">
         <div className={`group relative bg-white border border-slate-200 rounded-[2.5rem] md:rounded-[3.5rem] p-8 md:p-12 shadow-2xl transition-all duration-700 hover:-translate-y-4 ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`} style={{ transitionDelay: '300ms' }}>
           <div className="absolute -top-4 -right-4 md:-top-6 md:-right-6 w-16 h-16 md:w-24 md:h-24 bg-teal-500 rounded-full flex items-center justify-center text-white shadow-xl rotate-12 group-hover:rotate-0 transition-transform overflow-hidden">
-             <img src="shop_home.png" alt="Home Pack" className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform" />
+             <img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&q=80&w=400" alt="Home Pack" className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform" />
           </div>
           <p className="text-teal-500 text-[9px] font-black uppercase tracking-[0.4em] mb-4">Option A</p>
-          <h3 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 tracking-tight">Home Starter Kit</h3>
+          <h3 className="text-2xl md:text-4xl font-bold text-slate-900 mb-4 tracking-tight">Home Starter Kit</h3>
           <ul className="text-slate-400 text-xs md:text-sm mb-10 md:mb-12 space-y-3 md:space-y-4 font-light">
             <li className="flex items-center gap-3"><Droplets className="w-4 h-4 text-teal-500" /> Système AMANor Home</li>
             <li className="flex items-center gap-3"><Zap className="w-4 h-4 text-teal-500" /> + 2 Cartouches de rechange</li>
@@ -344,10 +350,10 @@ const TechnicalSection5 = ({ isActive }: { isActive: boolean }) => (
 
         <div className={`group relative bg-white border border-slate-200 rounded-[2.5rem] md:rounded-[3.5rem] p-8 md:p-12 shadow-2xl transition-all duration-700 hover:-translate-y-4 ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`} style={{ transitionDelay: '500ms' }}>
           <div className="absolute -top-4 -right-4 md:-top-6 md:-right-6 w-16 h-16 md:w-24 md:h-24 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 shadow-xl group-hover:bg-teal-500 group-hover:text-white transition-colors group-hover:rotate-12 overflow-hidden">
-             <img src="shop_nomad.png" alt="Nomad Pack" className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform" />
+             <img src="https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&q=80&w=400" alt="Nomad Pack" className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform" />
           </div>
           <p className="text-teal-500 text-[9px] font-black uppercase tracking-[0.4em] mb-4">Option B</p>
-          <h3 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 tracking-tight">Nomad Adventure</h3>
+          <h3 className="text-2xl md:text-4xl font-bold text-slate-900 mb-4 tracking-tight">Nomad Adventure</h3>
           <ul className="text-slate-400 text-xs md:text-sm mb-10 md:mb-12 space-y-3 md:space-y-4 font-light">
             <li className="flex items-center gap-3"><Droplets className="w-4 h-4 text-teal-500" /> Gourde AMANor Nomad</li>
             <li className="flex items-center gap-3"><Zap className="w-4 h-4 text-teal-500" /> + 3 Flavor Pods (Sensation)</li>

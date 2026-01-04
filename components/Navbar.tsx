@@ -5,7 +5,7 @@ import { ViewState } from '../App';
 
 interface NavbarProps {
   activeSection: number;
-  onViewChange?: (view: ViewState) => void;
+  onViewChange?: (view: ViewState, section?: number) => void;
   currentView?: ViewState;
 }
 
@@ -35,14 +35,14 @@ const Navbar: React.FC<NavbarProps> = ({ activeSection, onViewChange, currentVie
           The Vision
         </button>
         <button 
-          onClick={() => onViewChange?.('science')}
+          onClick={() => onViewChange?.('science', 0)}
           className={`opacity-80 hover:opacity-100 transition-opacity ${currentView === 'science' ? 'text-cyan-400 opacity-100' : ''}`}
         >
           Technology
         </button>
         <button 
-          onClick={() => onViewChange?.('science')}
-          className="opacity-80 hover:opacity-100 transition-opacity"
+          onClick={() => onViewChange?.('science', 3)}
+          className={`opacity-80 hover:opacity-100 transition-opacity ${currentView === 'science' && activeSection === 3 ? 'text-cyan-400 opacity-100' : ''}`}
         >
           Our Work
         </button>
