@@ -26,7 +26,6 @@ const ScienceView: React.FC<ScienceViewProps> = ({ onClose, initialSection = 0 }
 
   useEffect(() => {
     if (initialSection !== 0) {
-      // Small delay to ensure the component is mounted before scrolling
       const timer = setTimeout(() => scrollTo(initialSection), 100);
       return () => clearTimeout(timer);
     }
@@ -36,10 +35,8 @@ const ScienceView: React.FC<ScienceViewProps> = ({ onClose, initialSection = 0 }
 
   return (
     <div className="h-screen w-full bg-slate-50 text-slate-900 relative overflow-hidden font-sans animate-in fade-in duration-1000">
-      {/* Subtle Texture Background */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/graphy.png')]" />
       
-      {/* High-End Floating Exit Button */}
       <button 
         onClick={onClose}
         className="fixed top-6 right-6 md:top-10 md:right-10 z-[200] group flex items-center gap-3 bg-white/90 hover:bg-white backdrop-blur-xl border border-slate-200 p-2 pr-6 rounded-full transition-all active:scale-95 shadow-2xl shadow-slate-200/50"
@@ -50,7 +47,6 @@ const ScienceView: React.FC<ScienceViewProps> = ({ onClose, initialSection = 0 }
         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 group-hover:text-teal-600 transition-colors">Quitter le Labo</span>
       </button>
 
-      {/* Tech Header */}
       <header className="fixed top-6 left-8 md:top-10 md:left-20 z-50 flex items-center gap-6">
         <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-teal-500/10 flex items-center justify-center border border-teal-500/20 shadow-sm">
           <Cpu className="w-5 h-5 md:w-6 md:h-6 text-teal-600" />
@@ -61,7 +57,6 @@ const ScienceView: React.FC<ScienceViewProps> = ({ onClose, initialSection = 0 }
         </div>
       </header>
 
-      {/* Modern Vertical Navigation */}
       <div className="fixed left-6 md:left-20 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-5 md:gap-8">
         {navItems.map((name, idx) => (
           <button 
@@ -77,7 +72,6 @@ const ScienceView: React.FC<ScienceViewProps> = ({ onClose, initialSection = 0 }
         ))}
       </div>
 
-      {/* Main Visual Content Stack */}
       <div className="visual-stack pointer-events-none">
         <TechnicalSection1 isActive={activeSection === 0} />
         <TechnicalSection2 isActive={activeSection === 1} />
@@ -86,7 +80,6 @@ const ScienceView: React.FC<ScienceViewProps> = ({ onClose, initialSection = 0 }
         <TechnicalSection5 isActive={activeSection === 4} />
       </div>
 
-      {/* Scroll Driver */}
       <div 
         ref={driverRef}
         className="scroll-driver"
@@ -188,7 +181,6 @@ const DossierSection = ({ isActive }: { isActive: boolean }) => {
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
   const totalPages = 8;
   
-  // Cinematic high-fidelity presentation slides
   const slides = [
     { title: "Manifeste AMANor", desc: "La vision d'une autonomie hydrique totale pour chaque foyer marocain.", bg: "bg-slate-900", icon: Sparkles },
     { title: "Le Défi Dureté", desc: "Cartographie interactive de la minéralisation de l'eau au Maroc (Zones 35°f+).", bg: "bg-teal-900", icon: Droplets },
@@ -222,7 +214,6 @@ const DossierSection = ({ isActive }: { isActive: boolean }) => {
 
         <div className={`relative w-full max-w-4xl h-[400px] md:h-[580px] mx-auto bg-slate-50 rounded-[3rem] border border-slate-200 overflow-hidden shadow-2xl transition-all duration-1000 ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
           <div className="h-full w-full flex flex-col relative">
-              {/* Horizontal Cinematic Carousel */}
               <div className="flex-1 relative overflow-hidden flex items-center justify-center">
                 {slides.map((slide, idx) => {
                   const Icon = slide.icon;
@@ -245,7 +236,6 @@ const DossierSection = ({ isActive }: { isActive: boolean }) => {
                           <h4 className="text-3xl md:text-5xl font-black mb-6 tracking-tight text-center max-w-2xl leading-[1.1]">{slide.title}</h4>
                           <p className="text-white/60 text-base md:text-xl font-light text-center max-w-lg leading-relaxed">{slide.desc}</p>
                           
-                          {/* Progress Dots */}
                           <div className="mt-12 md:mt-16 flex gap-2">
                             {slides.map((_, i) => (
                               <div key={i} className={`h-1 transition-all duration-500 rounded-full ${i === currentPage ? 'w-8 bg-teal-500 shadow-[0_0_15px_rgba(20,184,166,0.6)]' : 'w-2 bg-white/10'}`} />
@@ -257,13 +247,11 @@ const DossierSection = ({ isActive }: { isActive: boolean }) => {
                 })}
               </div>
 
-              {/* Advanced UI Bar */}
               <div className="h-20 md:h-28 bg-white/90 backdrop-blur-xl border-t border-slate-100 px-6 md:px-12 flex items-center justify-between">
                   <div className="flex items-center gap-3 md:gap-10">
                       <button 
                         onClick={handlePrev}
                         className="p-4 text-slate-400 hover:text-teal-600 hover:bg-teal-50 rounded-full transition-all active:scale-90"
-                        aria-label="Previous Page"
                       >
                         <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
                       </button>
@@ -281,7 +269,6 @@ const DossierSection = ({ isActive }: { isActive: boolean }) => {
                       <button 
                         onClick={handleNext}
                         className="p-4 text-slate-400 hover:text-teal-600 hover:bg-teal-50 rounded-full transition-all active:scale-90"
-                        aria-label="Next Page"
                       >
                         <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
                       </button>
